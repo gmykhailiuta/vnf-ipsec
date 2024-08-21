@@ -41,7 +41,7 @@ _create_vti(){
         # vti interface address configuration
         if [ -n "$IPSEC_VTI_IPADDR_LOCAL" -a -n "$IPSEC_VTI_IPADDR_PEER" ]; then
             echo "Configuring local/peer ($IPSEC_VTI_IPADDR_LOCAL/$IPSEC_VTI_IPADDR_PEER) addresses on $VTI_IF."
-            ip addr add $IPSEC_VTI_IPADDR_LOCAL peer $IPSEC_VTI_IPADDR_PEER dev $VTI_IF
+            ip addr add $IPSEC_VTI_IPADDR_LOCAL peer $IPSEC_VTI_IPADDR_PEER dev $VTI_IF || true
         fi
 
         echo "Setting net.ipv4.conf.${VTI_IF}.disable_policy=1"
@@ -198,7 +198,9 @@ if [ -z "$IPSEC_USE_MANUAL_CONFIG" ]; then
 
     _print_variables
     _config
-
+    
+    _create_vti
+    
     if [ "$1" = "init" ]; then
         _initialize
         exit 0
